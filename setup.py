@@ -23,7 +23,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/wpilibsuite/sphinxext-photofinish",
     packages=["sphinxext"],
-    install_requires=["sphinx>=2.0"],
+    install_requires=["sphinx>=2.0", "beautifulsoup4==5.*", "pillow==8.*"],
     classifiers=[
         "Environment :: Plugins",
         "Environment :: Web Environment",
