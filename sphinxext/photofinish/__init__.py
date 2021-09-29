@@ -35,7 +35,7 @@ from sphinx.transforms.post_transforms.images import CRITICAL_PATH_CHAR_RE
 from sphinx.util import logging, status_iterator
 from sphinx.util.osutil import ensuredir
 
-from .svg2png import svg_to_png
+from .svgtopng import svg_to_png
 
 READTHEDOCS_BUILDERS = ["readthedocs", "readthedocsdirhtml"]
 
