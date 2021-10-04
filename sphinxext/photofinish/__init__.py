@@ -270,6 +270,7 @@ def process_images(img_datas: Set[ImgData]):
         ):
             pool.apply_async(process_image, args=(img_data))
 
+
 # NI stores LABView VI Snippets in a private chunk of type "niVI" within PNG files.
 VI_CHUNK_TYPE = bytes("niVI", "utf-8")
 
@@ -329,8 +330,12 @@ def builder_init(app: Sphinx):
     ):
         return
 
-    if app.config.photofinish_ci_only and not os.getenv("CI") or os.getenv("READTHEDOCS"):
-         return
+    if (
+        app.config.photofinish_ci_only
+        and not os.getenv("CI")
+        or os.getenv("READTHEDOCS")
+    ):
+        return
 
     # We'll store all the metadata needed to convert images and
     # defer all the work to the build's finish-tasks and let the
