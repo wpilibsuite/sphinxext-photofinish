@@ -1,5 +1,6 @@
+import os
 import re
-import tempfile
+import multiprocessing
 
 # There's a few ways to support avif:
 # 1. imagemagick
@@ -21,6 +22,7 @@ import tempfile
 from dataclasses import dataclass
 from os import PathLike
 from pathlib import Path
+import tempfile
 from typing import Any, Callable, Dict, Optional, Set
 
 from bs4 import BeautifulSoup, Tag
@@ -258,15 +260,15 @@ def visit_image(
 # parallel. That funcationality is currently commented out. If it's enabled,
 # this function should be serial.
 def process_images(img_datas: Set[ImgData]):
-    for img_data in status_iterator(
-        img_datas,
-        "generating responsive images... ",
-        "blue",
-        len(img_datas),
-        stringify_func=lambda i: str(i.dest_path.name),
-    ):
-        process_image(img_data)
-
+    with multiprocessing.Pool(processes=os.cpu_count() - 1) as pool:
+        for img_data in status_iterator(
+            img_datas,
+            "generating responsive images... ",
+            "blue",
+            len(img_datas),
+            stringify_func=lambda i: str(i.dest_path.name),
+        ):
+            pool.apply_async(process_image, args=(img_data))
 
 # NI stores LABView VI Snippets in a private chunk of type "niVI" within PNG files.
 VI_CHUNK_TYPE = bytes("niVI", "utf-8")
@@ -327,6 +329,9 @@ def builder_init(app: Sphinx):
     ):
         return
 
+    if app.config.photofinish_ci_only and not os.getenv("CI") or os.getenv("READTHEDOCS"):
+         return
+
     # We'll store all the metadata needed to convert images and
     # defer all the work to the build's finish-tasks and let the
     # write phase run faster
@@ -357,11 +362,12 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("max_viewport_width", 1000, "html")
     app.add_config_value("width_min", 500, "html")
     app.add_config_value("width_step", 300, "html")
+    app.add_config_value("photofinish_ci_only", True, "html")
     app.connect("builder-inited", builder_init, 1e99)
 
     return {
         "parallel_read_safe": True,
-        "parallel_write_safe": True,
+        "parallel_write_safe": False,
     }
 
 
