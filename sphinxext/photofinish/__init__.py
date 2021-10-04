@@ -30,6 +30,7 @@ from docutils.nodes import Node
 from docutils.writers.html5_polyglot import HTMLTranslator
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
+from git.objects.tree import TraversedTreeTup
 from sphinx.application import Sphinx
 from sphinx.builders.dirhtml import DirectoryHTMLBuilder
 from sphinx.builders.html import StandaloneHTMLBuilder
@@ -37,12 +38,15 @@ from sphinx.transforms.post_transforms.images import CRITICAL_PATH_CHAR_RE
 from sphinx.util import logging, status_iterator
 from sphinx.util.osutil import ensuredir
 
-from .svgtopng import svg_to_png
+from .svgtopng import NoToolError, svg_to_png
 
 READTHEDOCS_BUILDERS = ["readthedocs", "readthedocsdirhtml"]
 
 
 logger = logging.getLogger(__name__)
+
+
+SVG_NO_TOOL_MSG_PRINTED = False
 
 
 @dataclass(frozen=True, eq=True)
@@ -127,6 +131,8 @@ def visit_image(
     if "decoding" not in soup_img.attrs:
         soup_img.attrs["decoding"] = "async"
 
+    global SVG_NO_TOOL_MSG_PRINTED
+
     # SVG handling
     # For svgs, we don't care about generating various codecs / resolutions.
     # But, we do care about having accurate lazyloading placeholders to prevent browser layout shift.
@@ -142,6 +148,11 @@ def visit_image(
                     im_width, im_height = im.size
                 soup_img.attrs["height"] = im_height
                 soup_img.attrs["width"] = im_width
+            except NoToolError as e:
+                if not SVG_NO_TOOL_MSG_PRINTED:
+                    print(e)
+                    logger.info("No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function.")
+                    SVG_NO_TOOL_MSG_PRINTED = True
             except Exception as e:
                 print(
                     img_src_path,
@@ -256,9 +267,9 @@ def visit_image(
     translator.body.append(str(soup_picture))
 
 
-# This isn't parallelized. Sphinx has the ability to run all finish tasks in
-# parallel. That funcationality is currently commented out. If it's enabled,
-# this function should be serial.
+# Sphinx parallelization is not very functional
+# This spawns a number of processes to process the images since
+# we cannot rely on Sphinx to handle it
 def process_images(img_datas: Set[ImgData]):
     with multiprocessing.Pool(processes=os.cpu_count() or 1) as pool:
         results = []
@@ -366,7 +377,7 @@ def builder_init(app: Sphinx):
 
     app.builder.copy_image_files = new_copy_image_files
 
-
+    
 def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("max_viewport_width", 1000, "html")
     app.add_config_value("width_min", 500, "html")

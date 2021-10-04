@@ -337,9 +337,6 @@ def svg_to_png(
     err_msg = ["\nFailed to convert svg to png."]
 
     if not manage.a_command_exists:
-        err_msg.append(
-            "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
-        )
         raise NoToolError("\n".join(err_msg))
 
     raise FailedConversionError("\n".join(err_msg + log))
