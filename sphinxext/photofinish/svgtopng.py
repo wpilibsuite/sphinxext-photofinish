@@ -296,6 +296,7 @@ def svg_to_png(
 
     with manage("imagemagick"):
         # system imagemagick v7
+        imagemagick_path = "convert"
         found_imagemagick_path = which(imagemagick_path)
         if (
             not found_imagemagick_path
