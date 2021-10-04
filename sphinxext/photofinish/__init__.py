@@ -261,14 +261,18 @@ def visit_image(
 # this function should be serial.
 def process_images(img_datas: Set[ImgData]):
     with multiprocessing.Pool(processes=os.cpu_count() or 1) as pool:
-        for img_data in status_iterator(
-            img_datas,
+        results = []
+        for img_data in img_datas:
+            future = pool.apply_async(process_image, args=(img_data))
+            results.append((future, str(img_data.dest_path.name)))
+        for result in status_iterator(
+            results,
             "generating responsive images... ",
             "blue",
-            len(img_datas),
-            stringify_func=lambda i: str(i.dest_path.name),
+            len(results),
+            stringify_func=lambda i: i[1],
         ):
-            pool.apply_async(process_image, args=(img_data))
+            result[0].wait()
 
 
 # NI stores LABView VI Snippets in a private chunk of type "niVI" within PNG files.
