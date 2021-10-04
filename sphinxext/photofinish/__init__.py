@@ -151,7 +151,9 @@ def visit_image(
             except NoToolError as e:
                 if not SVG_NO_TOOL_MSG_PRINTED:
                     print(e)
-                    logger.info("No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function.")
+                    logger.info(
+                        "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
+                    )
                     SVG_NO_TOOL_MSG_PRINTED = True
             except Exception as e:
                 print(
@@ -377,7 +379,7 @@ def builder_init(app: Sphinx):
 
     app.builder.copy_image_files = new_copy_image_files
 
-    
+
 def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("max_viewport_width", 1000, "html")
     app.add_config_value("width_min", 500, "html")
