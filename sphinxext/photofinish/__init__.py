@@ -263,7 +263,7 @@ def process_images(img_datas: Set[ImgData]):
     with multiprocessing.Pool(processes=os.cpu_count() or 1) as pool:
         results = []
         for img_data in img_datas:
-            future = pool.apply_async(process_image, args=(img_data))
+            future = pool.apply_async(process_image, args=(img_data,))
             results.append((future, str(img_data.dest_path.name)))
         for result in status_iterator(
             results,
