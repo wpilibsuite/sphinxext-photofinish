@@ -260,7 +260,7 @@ def visit_image(
 # parallel. That funcationality is currently commented out. If it's enabled,
 # this function should be serial.
 def process_images(img_datas: Set[ImgData]):
-    with multiprocessing.Pool(processes=os.cpu_count() - 1) as pool:
+    with multiprocessing.Pool(processes=os.cpu_count() or 1) as pool:
         for img_data in status_iterator(
             img_datas,
             "generating responsive images... ",
