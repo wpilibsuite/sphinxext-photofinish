@@ -296,8 +296,11 @@ def svg_to_png(
 
     with manage("imagemagick"):
         # system imagemagick v7
-        imagemagick_path = "convert"
-        if not which(imagemagick_path):
+        found_imagemagick_path = which(imagemagick_path)
+        if (
+            not found_imagemagick_path
+            or "windows\\system32\\convert.exe" in found_imagemagick_path.lower()
+        ):
             raise NotFound("imagemagick", imagemagick_path)
         subprocess.run([imagemagick_path, *imagemagick_args], check=True)
         return
@@ -640,7 +643,11 @@ def svg_to_png(
     with manage("imagemagick"):
         # system imagemagick v7
         imagemagick_path = "convert"
-        if not which(imagemagick_path):
+        found_imagemagick_path = which(imagemagick_path)
+        if (
+            not found_imagemagick_path
+            or "windows\\system32\\convert.exe" in found_imagemagick_path.lower()
+        ):
             raise NotFound("imagemagick", imagemagick_path)
         subprocess.run([imagemagick_path, *imagemagick_args], check=True)
         return
