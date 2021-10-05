@@ -350,7 +350,7 @@ def svg_to_png(
         if not SVG_NO_TOOL_MSG_PRINTED:
             logger.info(
                 "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
-            ) 
+            )
             SVG_NO_TOOL_MSG_PRINTED = True
 
         raise NoToolError("\n".join(err_msg))
