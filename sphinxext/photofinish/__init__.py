@@ -40,7 +40,7 @@ from sphinx.util.osutil import ensuredir
 from .svgtopng import NoToolError, svg_to_png
 
 READTHEDOCS_BUILDERS = ["readthedocs", "readthedocsdirhtml"]
-
+SVG_NO_TOOL_MSG_PRINTED = False
 
 logger = logging.getLogger(__name__)
 
@@ -127,8 +127,6 @@ def visit_image(
     if "decoding" not in soup_img.attrs:
         soup_img.attrs["decoding"] = "async"
 
-    global SVG_NO_TOOL_MSG_PRINTED
-
     # SVG handling
     # For svgs, we don't care about generating various codecs / resolutions.
     # But, we do care about having accurate lazyloading placeholders to prevent browser layout shift.
@@ -145,7 +143,10 @@ def visit_image(
                 soup_img.attrs["height"] = im_height
                 soup_img.attrs["width"] = im_width
             except NoToolError as e:
-                pass  # no need to handle
+                if not SVG_NO_TOOL_MSG_PRINTED:
+                    print(e)
+                    global SVG_NO_TOOL_MSG_PRINTED
+                    SVG_NO_TOOL_MSG_PRINTED = True
             except Exception as e:
                 print(
                     img_src_path,

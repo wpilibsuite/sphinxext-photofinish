@@ -14,9 +14,6 @@ from sphinx.util import logging
 logger = logging.getLogger(__name__)
 
 
-SVG_NO_TOOL_MSG_PRINTED = False
-
-
 class NoToolError(RuntimeError):
     pass
 
@@ -345,13 +342,9 @@ def svg_to_png(
     err_msg = ["\nFailed to convert svg to png."]
 
     if not manage.a_command_exists:
-        global SVG_NO_TOOL_MSG_PRINTED
-
-        if not SVG_NO_TOOL_MSG_PRINTED:
-            logger.info(
-                "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
-            )
-            SVG_NO_TOOL_MSG_PRINTED = True
+        err_msg.append(
+            "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
+        )
 
         raise NoToolError("\n".join(err_msg))
 
