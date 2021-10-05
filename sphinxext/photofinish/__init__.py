@@ -30,7 +30,6 @@ from docutils.nodes import Node
 from docutils.writers.html5_polyglot import HTMLTranslator
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
-from git.objects.tree import TraversedTreeTup
 from sphinx.application import Sphinx
 from sphinx.builders.dirhtml import DirectoryHTMLBuilder
 from sphinx.builders.html import StandaloneHTMLBuilder
@@ -44,9 +43,6 @@ READTHEDOCS_BUILDERS = ["readthedocs", "readthedocsdirhtml"]
 
 
 logger = logging.getLogger(__name__)
-
-
-SVG_NO_TOOL_MSG_PRINTED = False
 
 
 @dataclass(frozen=True, eq=True)
@@ -148,13 +144,6 @@ def visit_image(
                     im_width, im_height = im.size
                 soup_img.attrs["height"] = im_height
                 soup_img.attrs["width"] = im_width
-            except NoToolError as e:
-                if not SVG_NO_TOOL_MSG_PRINTED:
-                    print(e)
-                    logger.info(
-                        "No conversion tool was found. Please install one of: cairosvg, svglib, inkscape, rsvg-convert, svgexport, or imagemagick. If you have one of these installed, they may not be on your path. Pass your installed tool's path into this function."
-                    )
-                    SVG_NO_TOOL_MSG_PRINTED = True
             except Exception as e:
                 print(
                     img_src_path,
