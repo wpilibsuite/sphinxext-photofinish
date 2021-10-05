@@ -353,6 +353,6 @@ def svg_to_png(
             )
             SVG_NO_TOOL_MSG_PRINTED = True
 
-            return
+        raise NoToolError("\n".join(err_msg))
 
     raise FailedConversionError("\n".join(err_msg + log))

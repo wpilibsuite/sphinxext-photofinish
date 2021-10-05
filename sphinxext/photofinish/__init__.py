@@ -144,6 +144,8 @@ def visit_image(
                     im_width, im_height = im.size
                 soup_img.attrs["height"] = im_height
                 soup_img.attrs["width"] = im_width
+            except NoToolError as e:
+                pass  # no need to handle
             except Exception as e:
                 print(
                     img_src_path,
