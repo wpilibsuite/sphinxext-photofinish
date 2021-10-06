@@ -143,6 +143,7 @@ def visit_image(
                 soup_img.attrs["height"] = im_height
                 soup_img.attrs["width"] = im_width
             except NoToolError as e:
+                global SVG_NO_TOOL_MSG_PRINTED
                 if not SVG_NO_TOOL_MSG_PRINTED:
                     print(e)
                     global SVG_NO_TOOL_MSG_PRINTED
