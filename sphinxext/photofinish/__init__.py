@@ -342,7 +342,12 @@ def builder_init(app: Sphinx):
     if (
         app.config.photofinish_ci_only
         and not os.getenv("CI")
-        or os.getenv("READTHEDOCS")
+    ):
+        return
+
+    if (
+        app.config.photofinish_ci_only
+        and not os.getenv("READTHEDOCS")
     ):
         return
 
