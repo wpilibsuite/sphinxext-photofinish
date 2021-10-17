@@ -334,7 +334,7 @@ def process_image(img_data: ImgData):
 
 def builder_init(app: Sphinx):
     if not (
-        isinstance(app.builder, (StandaloneHTMLBuilder, DirectoryHTMLBuilder))
+        isinstance(app.builder,  DirectoryHTMLBuilder)
         or app.builder.name in READTHEDOCS_BUILDERS
     ):
         return
