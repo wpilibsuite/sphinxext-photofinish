@@ -33,6 +33,7 @@ from PIL.PngImagePlugin import PngImageFile, PngInfo
 from sphinx.application import Sphinx
 from sphinx.builders.dirhtml import DirectoryHTMLBuilder
 from sphinx.builders.html import StandaloneHTMLBuilder
+from sphinx.builders.singlehtml import SingleFileHTMLBuilder
 from sphinx.transforms.post_transforms.images import CRITICAL_PATH_CHAR_RE
 from sphinx.util import logging, status_iterator
 from sphinx.util.osutil import ensuredir
@@ -336,7 +337,7 @@ def builder_init(app: Sphinx):
     if not (
         isinstance(app.builder, (StandaloneHTMLBuilder, DirectoryHTMLBuilder))
         or app.builder.name in READTHEDOCS_BUILDERS
-    ):
+    ) or isinstance(app.builder, SingleFileHTMLBuilder):
         return
 
     if app.config.photofinish_ci_only and not (
