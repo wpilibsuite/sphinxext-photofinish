@@ -375,7 +375,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("max_viewport_width", 1000, "html")
     app.add_config_value("width_min", 500, "html")
     app.add_config_value("width_step", 300, "html")
-    app.add_config_value("photofinish_ci_only", True, "html")
+    app.add_config_value("photofinish_ci_only", False, "html")
     app.connect("builder-inited", builder_init, 1e99)
 
     return {

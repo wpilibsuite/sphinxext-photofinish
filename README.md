@@ -29,3 +29,5 @@ Photofinish adds several `conf.py` options that you can optionally configure:
 `width_min` - Minimum width of images to generate. Default is 500.
 
 `width_step` - The resolution to iterate over for generating images. EX: 500, 800, 1100. Default is 300.
+
+`photofinish_ci_only` - Should this extension only run if the `CI` environment variable is set? Default is False.
