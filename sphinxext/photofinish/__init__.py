@@ -23,6 +23,9 @@ from dataclasses import dataclass
 from os import PathLike
 from pathlib import Path
 import tempfile
+from turtle import st
+import tinycss2
+import tinycss2.ast
 from typing import Any, Callable, Dict, Optional, Set
 
 from bs4 import BeautifulSoup, Tag
@@ -103,16 +106,41 @@ def visit_image(
     soup_img: Tag = BeautifulSoup(img_tag_str, features="html.parser").img
     soup_picture: Tag = BeautifulSoup().new_tag("picture")
 
-    # Move height / width from <img/> to <picture/>. The img tag will hold the actual
-    # resolution of the image file and its parent, picture, will hold
-    # the desired size constraints.
-    if "height" in soup_img.attrs:
-        soup_picture.attrs["height"] = soup_img.attrs["height"]
-        del soup_img.attrs["height"]
+    # Move height / width from img attributes to img style attributes.
+    # The img tag will hold the actual resolution of the image file and its style
+    # will hold the desired size constraints.
 
-    if "width" in soup_img.attrs:
-        soup_picture.attrs["width"] = soup_img.attrs["width"]
-        del soup_img.attrs["width"]
+    if "style" in soup_img.attrs:
+        styles = tinycss2.parse_declaration_list(
+            soup_img["style"], skip_comments=True, skip_whitespace=True
+        )
+    else:
+        styles = []
+
+    for attr in ("height", "width"):
+        if attr in soup_img.attrs:
+            styles = [s for s in styles if s.lower_name != attr]
+
+            attr_value = soup_img[attr]
+
+            try:
+                float(attr_value)
+                attr_value += "px"
+            except ValueError:
+                pass
+
+            styles.append(
+                tinycss2.ast.Declaration(
+                    line=None,
+                    column=None,
+                    name=attr,
+                    lower_name=attr.lower(),
+                    value=[tinycss2.parse_one_component_value(attr_value)],
+                    important=False,
+                )
+            )
+
+    soup_img["style"] = tinycss2.serialize(styles)
 
     # Lazy + async load by default
     # There is an open docutils feature request
