@@ -26,7 +26,7 @@ setuptools.setup(
     install_requires=[
         "sphinx>=2.0",
         "beautifulsoup4>=4",
-        "pillow>=8",
+        "pillow>=10.0.1",
         "tinycss2>=1.1.1",
     ],
     classifiers=[
@@ -37,9 +37,11 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Programming Language :: Python",
         "Topic :: Documentation :: Sphinx",
         "Topic :: Documentation",
@@ -47,6 +49,6 @@ setuptools.setup(
         "Topic :: Text Processing",
         "Topic :: Utilities",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     include_package_data=True,
 )
