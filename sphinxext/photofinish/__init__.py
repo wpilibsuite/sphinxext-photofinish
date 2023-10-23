@@ -38,7 +38,7 @@ from sphinx.builders.dirhtml import DirectoryHTMLBuilder
 from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.builders.singlehtml import SingleFileHTMLBuilder
 from sphinx.transforms.post_transforms.images import CRITICAL_PATH_CHAR_RE
-from sphinx.util import logging, status_iterator
+from sphinx.util.display import logging, status_iterator
 from sphinx.util.osutil import ensuredir
 
 from .svgtopng import NoToolError, svg_to_png
