@@ -139,10 +139,13 @@ def visit_image(
                     important=False,
                 )
             )
-    
+
     if len(styles) == 1:
         for attr in ("height", "width"):
-            if not any(attr.lower() == lower_name for lower_name in [decl.lower_name for decl in styles]):
+            if not any(
+                attr.lower() == lower_name
+                for lower_name in [decl.lower_name for decl in styles]
+            ):
                 styles.append(
                     tinycss2.ast.Declaration(
                         line=None,
