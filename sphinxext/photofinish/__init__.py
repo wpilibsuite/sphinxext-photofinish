@@ -140,6 +140,23 @@ def visit_image(
                 )
             )
 
+    if len(styles) == 1:
+        for attr in ("height", "width"):
+            if not any(
+                attr.lower() == lower_name
+                for lower_name in [decl.lower_name for decl in styles]
+            ):
+                styles.append(
+                    tinycss2.ast.Declaration(
+                        line=None,
+                        column=None,
+                        name=attr,
+                        lower_name=attr.lower(),
+                        value=[tinycss2.parse_one_component_value("auto")],
+                        important=False,
+                    )
+                )
+
     soup_img["style"] = tinycss2.serialize(styles)
 
     # Lazy + async load by default
