@@ -187,8 +187,11 @@ def visit_image(
                 svg_to_png(img_src_path, temp_img_path)
                 with Image.open(temp_img_path) as im:
                     im_width, im_height = im.size
-                soup_img.attrs["height"] = im_height
-                soup_img.attrs["width"] = im_width
+
+                # We are scaling down to our original width/height
+                # to respect sphinx image scaling
+                soup_img.attrs["height"] = im_height * soup_img.attr["width"]/im_width
+                soup_img.attrs["width"] = soup_img.attrs["width"]
             except NoToolError as e:
                 if not SVG_NO_TOOL_MSG_PRINTED:
                     print(e)
