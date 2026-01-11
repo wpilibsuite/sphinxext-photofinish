@@ -209,6 +209,7 @@ def visit_image(
 
     with Image.open(img_src_path) as im:
         im_width, im_height = im.size
+        vi_snippet_data = get_vi_snippet_data(im)
 
     # Set image ratio. Browsers need the aspect ratio of the image for
     # non-janky lazyloading. We can either give it the aspect ratio
@@ -225,6 +226,11 @@ def visit_image(
     ]
 
     for dest_ext in dest_exts:
+
+        if img_ext == ".png" and dest_ext != ".png":
+            if vi_snippet_data:
+                continue
+
         srcset_srcs = []
         width_min = app.config.width_min
         width_max = 2 * app.config.max_viewport_width
