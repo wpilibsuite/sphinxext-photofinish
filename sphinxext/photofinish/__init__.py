@@ -1,6 +1,7 @@
 import os
 import re
 import multiprocessing
+from urllib.parse import quote
 
 # There's a few ways to support avif:
 # 1. imagemagick
@@ -267,7 +268,7 @@ def visit_image(
                 ImgData(src_path=img_src_path, dest_path=new_dest, width=w, height=h)
             )
 
-            srcset_srcs.append(f"{new_uri} {w}w")
+            srcset_srcs.append(f"{quote(new_uri.as_posix(), safe='/')} {w}w")
 
         srcset = ", ".join(srcset_srcs)
 
