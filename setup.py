@@ -1,14 +1,19 @@
 import subprocess
 import setuptools
 
+version = "9999"
 try:
-    ret = subprocess.check_output(
+    ret = subprocess.run(
         "git describe --tags --abbrev=0",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
         shell=True,
     )
-    version = ret.decode("utf-8").strip()
-except:
-    version = "main"
+    version = ret.stdout.decode("utf-8").strip()
+except Exception as error:
+    print(f"Could not determine package version: {error}")
+    pass
 
 with open("README.md", "r", encoding="utf-8") as readme:
     long_description = readme.read()
