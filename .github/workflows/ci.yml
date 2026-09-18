@@ -8,11 +8,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v7
-      with:
-        python-version: 3.11
-    - uses: pre-commit/action@v3.0.1
+    - uses: j178/prek-action@v3.0.0
 
   test:
     name: "Test - ${{ matrix.os }}, py ${{ matrix.python-version }}, Sphinx ${{ matrix.sphinx }}"
